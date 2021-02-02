@@ -4,13 +4,13 @@ WORKDIR /app
 
 # App dependencies
 COPY package*.json ./
-RUN npm i
+RUN npm install
 
 # Copy app source code
 COPY . .
 
 # Env setup
-COPY .env.example .env
+COPY ./.env.example ./.env
 
 #Expose port and begin application
 EXPOSE 9000

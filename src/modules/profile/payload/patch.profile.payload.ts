@@ -5,6 +5,7 @@ import {
   MinLength,
   IsAlphanumeric,
   Matches,
+  IsNumber,
 } from 'class-validator';
 
 /**
@@ -33,9 +34,25 @@ export class PatchProfilePayload {
    * Name field
    */
   @ApiProperty()
-  @Matches(/^[a-zA-Z ]+$/)
+  @Matches(/^[a-zA-Z\wÀ-ú ]+$/)
   @IsNotEmpty()
   name: string;
+
+  /**
+   * Passport field
+   */
+  @ApiProperty()
+  @IsNumber()
+  @IsNotEmpty()
+  passport: number;
+
+  @ApiProperty({
+    example: '257.26',
+    required: false,
+  })
+  @IsNumber()
+  @IsNotEmpty()
+  balance: number;
 
   /**
    * Password field

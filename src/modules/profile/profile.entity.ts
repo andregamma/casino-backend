@@ -29,6 +29,12 @@ export class Profile {
   name: string;
 
   /**
+   * Passport column
+   */
+  @Column({ unique: true })
+  passport: number;
+
+  /**
    * Email column
    */
   @Column()
@@ -40,10 +46,13 @@ export class Profile {
   @Column()
   avatar: string;
 
+  @Column()
+  balance: number;
+
   /**
    * Column to represent a one to many relationship with the roles entity
    */
-  @OneToMany(type => Roles, role => role.profile)
+  @OneToMany((type) => Roles, (role) => role.profile)
   roles: Roles[];
 
   /**

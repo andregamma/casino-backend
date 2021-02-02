@@ -11,8 +11,8 @@ services:
 
   nginx:
     build:
-      context: .
-      dockerfile: Dockerfile-Nginx
+      context: ./nginx
+      dockerfile: Dockerfile
     container_name: nest-nginx
     depends_on:
       - nest
@@ -30,8 +30,8 @@ services:
     environment:
       MYSQL_DATABASE: nest
       MYSQL_USER: root
-      MYSQL_PASSWORD:
-      MYSQL_ROOT_PASSWORD:
+      MYSQL_PASSWORD: MYSQL_PASSWORD
+      MYSQL_ROOT_PASSWORD: MYSQL_ROOT_PASSWORD
     ports:
       - 3306:3306
     volumes:

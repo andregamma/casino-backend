@@ -77,6 +77,17 @@ export class ProfileService {
   }
 
   /**
+   * Fetches profile balance
+   * @param id
+   * @returns fetched user balance
+   */
+  async getUserBalance(id: number): Promise<number> {
+    const profile = await this.profileRepository.findOne({ id });
+
+    return profile.balance;
+  }
+
+  /**
    * Create a profile with RegisterPayload fields
    * @param {RegisterPayload} payload profile payload
    * @returns {Promise<Profile>} data from the created profile
@@ -116,7 +127,7 @@ export class ProfileService {
     const { username } = payload;
     const profile = await this.getByUsername(username);
     if (profile) {
-      Object.keys(payload).forEach(key => {
+      Object.keys(payload).forEach((key) => {
         if (key === 'password') {
           key = crypto.createHmac('sha256', key).digest('hex');
         }

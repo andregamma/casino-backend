@@ -58,6 +58,7 @@ export class AuthService {
     username,
     name,
     email,
+    passport,
   }: Profile): Promise<ITokenReturnBody> {
     return {
       expires: this.expiration,
@@ -67,6 +68,7 @@ export class AuthService {
         username,
         name,
         email,
+        passport,
       }),
     };
   }

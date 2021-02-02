@@ -5,6 +5,7 @@ import {
   MinLength,
   IsAlphanumeric,
   Matches,
+  IsNumber,
 } from 'class-validator';
 
 /**
@@ -22,6 +23,16 @@ export class RegisterPayload {
   email: string;
 
   /**
+   * Passport field
+   */
+  @ApiProperty({
+    required: true,
+  })
+  @IsNumber()
+  @IsNotEmpty()
+  passport: number;
+
+  /**
    * Username field
    */
   @ApiProperty({
@@ -37,7 +48,7 @@ export class RegisterPayload {
   @ApiProperty({
     required: true,
   })
-  @Matches(/^[a-zA-Z ]+$/)
+  @Matches(/^[a-zA-Z\wÀ-ú ]+$/)
   @IsNotEmpty()
   name: string;
 

@@ -11,6 +11,7 @@ import { ProfileModule } from '../profile/profile.module';
 import { WinstonModule } from '../winston/winston.module';
 import { AccessControlModule } from 'nest-access-control';
 import { roles } from './app.roles';
+import { EventsModule } from '../events/events.module';
 
 @Module({
   imports: [
@@ -73,6 +74,7 @@ import { roles } from './app.roles';
     ConfigModule,
     AuthModule,
     ProfileModule,
+    EventsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
