@@ -1,0 +1,14 @@
+import { Transformer } from './Transformer';
+import { {{Entity}} } from '../entities/{{Entity}}';
+
+export interface {{Entity}}TransformerOptions {
+  // Opções disposiveis para criar regras de transformer
+}
+
+export class {{Entity}}Transformer
+  implements Transformer<{{Entity}}, {{Entity}}TransformerOptions> {
+  transform({{entity}}: {{Entity}}, options: {{Entity}}TransformerOptions): any {
+      // Suas regras
+    return {{entity}};
+  }
+}

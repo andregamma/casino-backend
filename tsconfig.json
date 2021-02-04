@@ -8,8 +8,18 @@
     "allowSyntheticDefaultImports": true,
     "target": "es2017",
     "sourceMap": true,
-    "outDir": "./dist",
-    "baseUrl": "./",
-    "incremental": true
+    "baseUrl": "./src",
+    "esModuleInterop": true,
+    "incremental": true,
+    "resolveJsonModule": true,
+    // "incremental": true,
+
+    "preserveConstEnums": false,
+    "strictNullChecks": false,
+    "allowJs": true,
+    "moduleResolution": "node",
+    "lib": ["es2017"],
+    "outDir": ".build",
+    "rootDir": "./"
   }
 }

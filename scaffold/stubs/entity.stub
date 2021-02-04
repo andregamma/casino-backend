@@ -1,0 +1,12 @@
+import {
+  Entity,
+  Index,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+
+@Index('pk_{{table}}', ['id'], { unique: true })
+@Entity('{{table}}', { schema: 'public' })
+export class {{Entity}} {
+  @PrimaryGeneratedColumn({ type: 'integer', name: 'id' })
+    id: number;
+}

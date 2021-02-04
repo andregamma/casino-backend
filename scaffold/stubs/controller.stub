@@ -1,0 +1,71 @@
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  Put,
+  Res,
+  Req
+} from '@nestjs/common';
+import { {{Entity}} } from '../entities/{{Entity}}';
+import { {{Entity}}Service } from '../services/{{Entity}}Service';
+
+@Controller('{{entity}}')
+export class {{Entity}}Controller {
+  constructor(
+    private {{entity}}Service: {{Entity}}Service,
+  ) {}
+
+  @Get()
+  async index(@Req() req, @Res() res) {
+  }
+
+  @Post()
+  async store(@Body() req, @Res() res) {
+    try {
+      await this.{{entity}}Service
+        .useValidator({})
+        .passesOrFail(req);
+
+      const params = this.{{entity}}Service.setAttributes(req)({{Entity}});
+      const {{entity}} = await this.{{entity}}Service.repository.save(params)
+
+      return res.json({{entity}})
+    } catch (e) {
+      return res.status(400).json({
+        error: true,
+        message: e.message,
+      });
+    }
+  }
+
+  @Get(':id')
+  async show(@Param('id', new ParseIntPipe()) id, @Res() res) {
+  }
+
+  @Put(':id')
+  async update(@Param('id', new ParseIntPipe()) id, @Body() req, @Res() res) {
+  }
+
+  @Delete(':id')
+  async delete(@Param('id', new ParseIntPipe()) id, @Res() res) {
+    try {
+      const deleted = await this.{{entity}}Service.repository.delete(id);
+      if (deleted.affected < 1) {
+        return res.status(400).json({
+          error: true,
+          message: 'Nenhum item foi encontrado com esse identificador',
+        });
+      }
+    } catch (e) {
+      return res.status(500).json({
+        error: true,
+        message: 'Erro interno ! Não foi possível deletar'
+      })
+    }
+  }
+}
+

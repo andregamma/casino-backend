@@ -1,57 +1,20 @@
+import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import {
-  FastifyAdapter,
-  NestFastifyApplication,
-} from '@nestjs/platform-fastify';
-import * as headers from 'fastify-helmet';
-//import * as fastifyRateLimiter from 'fastify-rate-limit';
-import { AppModule } from './modules/app/app.module';
-import { ValidationPipe } from '@nestjs/common';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { RedisIoAdapter } from './adapters/redis-io.adapter';
+import { AppModule } from './AppModule';
+import { initAdapters } from './main/resources/adapters/InitAdapters';
+import { NestApplication } from './main/resources/utils/NestApplication';
 
-/**
- * The endpoint for open api ui
- * @type {string}
- */
-export const SWAGGER_API_ROOT = 'api/docs';
-/**
- * The name given to the api
- * @type {string}
- */
-export const SWAGGER_API_NAME = 'API';
-/**
- * A short description for api
- * @type {string}
- */
-export const SWAGGER_API_DESCRIPTION = 'API Description';
-/**
- * Current version of the api
- * @type {string}
- */
-export const SWAGGER_API_CURRENT_VERSION = '1.0';
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
 
-(async () => {
-  const app = await NestFactory.create<NestFastifyApplication>(
-    AppModule,
-    new FastifyAdapter({ logger: true }),
-  );
-  const options = new DocumentBuilder()
-    .setTitle(SWAGGER_API_NAME)
-    .setDescription(SWAGGER_API_DESCRIPTION)
-    .setVersion(SWAGGER_API_CURRENT_VERSION)
-    .addBearerAuth()
-    .build();
-  const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup(SWAGGER_API_ROOT, app, document);
-  app.enableCors();
-  //app.register(headers);
-  app.register(require('fastify-rate-limit'), {
-    max: 100,
-    timeWindow: '1 minute',
+  app.enableCors({ credentials: true, origin: true });
+
+  NestApplication.getInstance(app);
+
+  initAdapters(app);
+
+  await app.listen(process.env.SERVER_HTTP_PORT, () => {
+    Logger.log(process.env.SERVER_HTTP_PORT, 'HttpPort');
   });
-  app.useGlobalPipes(new ValidationPipe());
-  //app.useWebSocketAdapter(new RedisIoAdapter(app));
-
-  await app.listen(9000, '0.0.0.0');
-})();
+}
+bootstrap();

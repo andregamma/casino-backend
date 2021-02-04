@@ -1,0 +1,39 @@
+import { Logger, UseInterceptors } from '@nestjs/common';
+import {
+  OnGatewayConnection,
+  OnGatewayDisconnect,
+  OnGatewayInit,
+  SubscribeMessage,
+  WebSocketGateway,
+  WebSocketServer,
+} from '@nestjs/websockets';
+import { Observable } from 'rxjs';
+import SocketIO from 'socket.io';
+import { RedisPropagatorInterceptor } from '../resources/interceptors/RedisPropagatorInterceptor';
+import { BaseGateway } from './BaseGateway';
+
+@UseInterceptors(RedisPropagatorInterceptor)
+@WebSocketGateway()
+export class {{Entity}}Gateway extends BaseGateway
+  implements OnGatewayConnection, OnGatewayInit, OnGatewayDisconnect {
+  @WebSocketServer() server: SocketIO.Server;
+
+  private logger = new Logger('{{Entity}}Gateway');
+
+  protected eventPrefix = '{{entity}}';
+
+  constructor() {
+    super()
+  }
+
+@SubscribeMessage('{{entity}}:example')
+public {{entity}}Message(): Observable<any> {
+}
+
+async handleConnection(client: any, ...args: any[]): Promise<any> {
+  }
+
+afterInit(server: any): any {}
+
+handleDisconnect(client: any): any {}
+}

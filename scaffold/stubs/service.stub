@@ -1,0 +1,25 @@
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { REQUEST } from '@nestjs/core';
+import { Request } from 'express';
+import { InjectRepository } from '@nestjs/typeorm';
+import { FieldsSearchable } from '../resources/criteria/Criteria';
+import { BaseService } from './BaseService';
+import { {{Entity}}Repository } from '../repositories/{{Entity}}Repository';
+import { {{Entity}} } from '../entities/{{Entity}}';
+
+@Injectable()
+export class {{Entity}}Service extends BaseService<{{Entity}}> {
+  protected fieldsSearchable: FieldsSearchable = {
+  };
+
+  private logger = new Logger('{{Entity}}Service')
+
+  constructor(
+    @InjectRepository({{Entity}}Repository)
+    repository: {{Entity}}Repository,
+    @Inject(REQUEST) protected request: Request,
+  ) {
+    super();
+    this.setRepository(repository);
+  }
+}
