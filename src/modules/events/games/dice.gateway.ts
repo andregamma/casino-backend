@@ -13,7 +13,7 @@ import { ProfileService } from 'src/modules/profile/profile.service';
 import { createCipheriv, randomBytes, scrypt } from 'crypto';
 import { promisify } from 'util';
 
-@WebSocketGateway(80)
+@WebSocketGateway(80, { namespace: 'dice' })
 export class DiceGateway {
   constructor(private profileService: ProfileService) {}
 

@@ -6,6 +6,7 @@ import {
   IsAlphanumeric,
   Matches,
   IsNumber,
+  IsBoolean,
 } from 'class-validator';
 
 /**
@@ -53,6 +54,9 @@ export class PatchProfilePayload {
   @IsNumber()
   @IsNotEmpty()
   balance: number;
+
+  @IsBoolean()
+  isPlaying: boolean;
 
   /**
    * Password field

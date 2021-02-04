@@ -49,6 +49,12 @@ export class Profile {
   @Column()
   balance: number;
 
+  @Column('boolean', {
+    name: 'isPlaying',
+    default: false,
+  })
+  isPlaying: boolean;
+
   /**
    * Column to represent a one to many relationship with the roles entity
    */
