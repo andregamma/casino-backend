@@ -59,7 +59,7 @@ export class UserService extends BaseService<User> {
   public async store(user: User): Promise<CreateUser> {
     try {
       const password = await this.encrypt(user.password);
-      const lastIp = this.request.ip;
+      // const lastIp = this.request.ip;
       const regDate = new Date().toISOString();
       const rankId = 1;
 
@@ -67,7 +67,7 @@ export class UserService extends BaseService<User> {
         const created = await this.create({
           ...user,
           password,
-          lastIp,
+          // lastIp,
           regDate,
           rankId,
         });

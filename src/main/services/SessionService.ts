@@ -10,7 +10,7 @@ import { RedisService } from './RedisService';
 import { User } from '../entities/User';
 
 export interface TokenGenerate {
-  player: User;
+  user: User;
   token: string;
   socketId?: string;
 }
@@ -34,32 +34,33 @@ export class SessionService extends BaseService<Session> {
     repository: SessionRepository,
     private redisService: RedisService,
   ) {
-    super(repository);
+    super();
+    this.setRepository(repository);
   }
 
   public async generate(
-    player: User,
+    user: User,
     expiresIn = '48h',
   ): Promise<TokenGenerate | false> {
     try {
-      const payload = this.generateJwtPayload(player);
+      const payload = this.generateJwtPayload(user);
 
-      await this.invalidatePreviousKeys(player);
+      await this.invalidatePreviousKeys(user);
 
       const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn });
 
       const created = await this.repository.insert({
-        userId: player.id,
+        userId: user.id,
         authToken: token,
-        active: true,
-        created: new Date().toISOString(),
+        active: 1,
+        createdAt: new Date().toISOString(),
       });
 
-      if (player.password) {
-        delete player.password;
+      if (user.password) {
+        delete user.password;
       }
 
-      const generated = { player, token };
+      const generated = { user, token };
 
       const saved = await this.saveOnMemory(generated);
 
@@ -86,10 +87,10 @@ export class SessionService extends BaseService<Session> {
       const previousKeys = await this.repository.update(
         {
           userId: player.id,
-          active: true,
+          active: 1,
         },
         {
-          active: true,
+          active: 1,
         },
       );
 
@@ -124,9 +125,7 @@ export class SessionService extends BaseService<Session> {
       if (session) {
         session.socketId = socketId;
 
-        this.logger.log(
-          `Inserindo socketId na sessão de ${session.player.username}`,
-        );
+        this.logger.log(`Inserindo socketId na sessão de ${session.user.id}`);
 
         await this.saveOnMemory(session);
 
@@ -146,9 +145,7 @@ export class SessionService extends BaseService<Session> {
       const session = await this.getSessionBySocketId(socketId);
 
       if (session) {
-        this.logger.log(
-          `Removendo socket da sessão de ${session.player.username}`,
-        );
+        this.logger.log(`Removendo socket da sessão de ${session.user.id}`);
         if (session.socketId) {
           delete session.socketId;
         }
@@ -170,7 +167,7 @@ export class SessionService extends BaseService<Session> {
       // Remove o objeto do player atual das chaves antigas
       const oldTokensWithoutCurrentPlayer = this.removeCurrentPlayerFromTokens(
         oldKeys,
-        generatedToken.player.id,
+        generatedToken.user.id,
       );
 
       // Insere o novo token do player atual
@@ -188,7 +185,7 @@ export class SessionService extends BaseService<Session> {
   }
 
   public removeCurrentPlayerFromTokens(keys: TokenGenerate[], userId: number) {
-    return keys.filter((token) => token.player.id !== userId);
+    return keys.filter((token) => token.user.id !== userId);
   }
 
   public async removePlayerSession(userId: number) {
@@ -239,7 +236,7 @@ export class SessionService extends BaseService<Session> {
       }
     }
 
-    return tokens.find((token) => token.player.id === userId) || false;
+    return tokens.find((token) => token.user.id === userId) || false;
   }
 
   public async getSessionBySocketId(

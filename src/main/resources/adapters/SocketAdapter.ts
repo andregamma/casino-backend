@@ -138,7 +138,7 @@ export class SocketAdapter extends IoAdapter implements WebSocketAdapter {
                   );
 
                   await this.sessionService.removePlayerSession(
-                    currentUserSession.player.id,
+                    currentUserSession.user.id,
                   );
 
                   // Desconecta o cliente que estava conectado anteriormente

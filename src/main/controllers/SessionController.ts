@@ -33,15 +33,15 @@ export class SessionController {
 
       // const identified = await this.playerService.identify(req);
 
-      const identified: { success: boolean; player: User; reason: string } = {
+      const identified: { success: boolean; user: User; reason: string } = {
         success: true,
         // @ts-ignore
-        player: { id: 1, username: '', password: '' },
+        user: { id: 1, username: '', password: '' },
         reason: '',
       };
 
       if (identified.success) {
-        const token = await this.sessionService.generate(identified.player);
+        const token = await this.sessionService.generate(identified.user);
 
         if (token) {
           return res.json(token);

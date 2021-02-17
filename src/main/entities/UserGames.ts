@@ -15,7 +15,7 @@ import { RoomEvents } from './RoomEvents';
   ['userId', 'gameId', 'roomId'],
   { unique: true },
 )
-@Entity('user_games', { schema: 'cassino' })
+@Entity('user_games', { schema: 'casino' })
 export class UserGames {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;

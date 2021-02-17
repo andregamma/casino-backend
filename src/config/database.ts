@@ -27,6 +27,7 @@ const Database: TypeOrmModuleOptions = {
   cli: {
     migrationsDir: join('src', 'main', 'resources', 'database', 'migrations'),
   },
+  logging: true,
 };
 
 export = Database;

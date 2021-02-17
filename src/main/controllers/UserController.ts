@@ -11,13 +11,14 @@ import {
   Req,
 } from '@nestjs/common';
 import { NotAuth } from '../resources/guards/auth/NotAuth';
-import { userID } from '../resources/guards/auth/UserID';
+import { userID as UserID } from '../resources/guards/auth/UserID';
 import { User } from '../entities/User';
 import { UserService } from '../services/UserService';
 import {
   UserTransformer,
   UserTransformerOptions,
 } from '../transformers/UserTransformer';
+import { UpdateUserDto } from '../providers/RedisProvider/dto/UpdateUserDto';
 
 @Controller('user')
 export class UserController {
@@ -69,7 +70,7 @@ export class UserController {
   }
 
   @Get('current')
-  async current(@userID() userID, @Res() res) {
+  async current(@UserID() userID, @Res() res) {
     try {
       console.log(userID);
       const user = await this.userService.repository.findOne(userID);
@@ -104,9 +105,27 @@ export class UserController {
   @Put(':id')
   async update(
     @Param('id', new ParseIntPipe()) id: number,
-    @Body() req,
+    @Body() req: UpdateUserDto,
     @Res() res,
-  ) {}
+  ) {
+    try {
+      const updated = await this.userService.repository.update(id, req);
+      const user = await this.userService.repository.findOne(id);
+      if (updated.affected < 1) {
+        return res.status(400).json({
+          error: true,
+          message: 'Nenhum item foi encontrado com esse identificador',
+        });
+      }
+
+      return res.json({ data: user });
+    } catch (e) {
+      return res.status(500).json({
+        error: true,
+        message: 'Não foi possível atualizar esse usuário',
+      });
+    }
+  }
 
   @Delete(':id')
   async delete(@Param('id', new ParseIntPipe()) id, @Res() res) {

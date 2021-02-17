@@ -9,9 +9,9 @@ import {
 import { User } from './User';
 
 @Index('pk_sessions', ['id'], { unique: true })
-@Entity('session', { schema: 'public' })
+@Entity('session', { schema: 'casino' })
 export class Session {
-  @PrimaryGeneratedColumn({ type: 'integer', name: 'id' })
+  @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
   id: number;
 
   @Column('int', { name: 'user_id' })
@@ -20,13 +20,16 @@ export class Session {
   @Column('varchar', { name: 'auth_token', length: 255 })
   authToken: string;
 
-  @Column('boolean', { name: 'active' })
-  active: boolean;
+  @Column('tinyint', { name: 'active' })
+  active: number;
 
   @Column('datetime', { name: 'created_at' })
-  created: string;
+  createdAt: Date;
 
-  @ManyToOne(() => User, (player) => player.sessions)
-  @JoinColumn([{ name: 'user_id' }])
+  @ManyToOne(() => User, (user) => user.sessions, {
+    onDelete: 'NO ACTION',
+    onUpdate: 'NO ACTION',
+  })
+  @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
   user: User;
 }
